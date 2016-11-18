@@ -729,6 +729,15 @@ if (BUILD_PYTHON)
 
 endif (BUILD_PYTHON)
 
+# fuzz tests: tests/fuzz
+
+# TODO: FUZZ_TEST=ON once PROTON-1413 and PROTON-1414 are fixed
+option(FUZZ_TEST "Enable building fuzzers and regression testing with libFuzzer" OFF)
+option(FUZZING_ENGINE "Link with libFuzzingEngine. When OFF, link with a simple driver" OFF)
+if (FUZZ_TEST)
+  add_subdirectory(src/tests/fuzz)
+endif (FUZZ_TEST)
+
 find_program(RUBY_EXE "ruby")
 if (RUBY_EXE AND BUILD_RUBY)
   set (rb_root "${pn_test_root}/ruby")

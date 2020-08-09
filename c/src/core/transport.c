@@ -2004,6 +2004,7 @@ static int pni_process_ssn_setup(pn_transport_t *transport, pn_endpoint_t *endpo
                     state->outgoing_transfer_count,
                     state->incoming_window,
                     state->outgoing_window);
+      printf("incoming, outgoing window from open: %lu %lu\n", (unsigned long)state->incoming_window, (unsigned long)state->outgoing_window);
     }
   }
 

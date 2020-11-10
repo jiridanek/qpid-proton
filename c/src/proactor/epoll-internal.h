@@ -43,6 +43,7 @@
 
 #include <proton/connection_driver.h>
 #include <proton/proactor.h>
+#include <string.h>
 
 #include "netaddr-internal.h"
 #include "proactor-internal.h"
@@ -324,8 +325,20 @@ static inline void pmutex_init(pthread_mutex_t *pm){
 }
 
 static inline void pmutex_finalize(pthread_mutex_t *m) { pthread_mutex_destroy(m); }
-static inline void lock(pmutex *m) { pthread_mutex_lock(m); }
-static inline void unlock(pmutex *m) { pthread_mutex_unlock(m); }
+static inline void lock(pmutex *m) {
+    int err = pthread_mutex_lock(m);
+    if (err != 0) {
+        fprintf(stderr, "Error locking mutex: %s\n", strerror(err));
+        exit(1);
+    }
+}
+static inline void unlock(pmutex *m) {
+    int err = pthread_mutex_unlock(m);
+    if (err != 0) {
+        fprintf(stderr, "Error unlocking mutex: %s\n", strerror(err));
+        exit(1);
+    }
+}
 
 static inline bool pconnection_has_event(pconnection_t *pc) {
   return pn_connection_driver_has_event(&pc->driver);

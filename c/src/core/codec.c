@@ -471,7 +471,7 @@ static int pni_data_intern_node(pn_data_t *data, pni_node_t *node)
   if (data->buf == NULL) {
     // Heuristic to avoid growing small buffers too much
     // size + 1 to allow for zero termination
-    size_t size = pn_max(bytes->size+1, PNI_INTERN_MINSIZE);
+    size_t size = pn_max(bytes->size+2, PNI_INTERN_MINSIZE);
     data->buf = pn_buffer(size);
   }
   size_t oldcap = pn_buffer_capacity(data->buf);

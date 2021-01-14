@@ -109,13 +109,13 @@ class Message(object):
         for k in self.properties.keys():
             if isinstance(k, unicode):
                 # Py2 & Py3 strings and their subclasses
-                if type(k) is symbol or type(k) is char:
+                if isinstance(k, symbol) or isinstance(k, char):
                     # Exclude symbol and char
                     raise MessageException('Application property key is not string type: key=%s %s' % (str(k), type(k)))
-                if type(k) is not unicode:
+                if not isinstance(k, unicode):
                     # Only for string subclasses, convert to string
                     changed_keys.append((k, unicode(k)))
-            elif isinstance(k, str) and not (type(k) is decimal128):
+            elif isinstance(k, str) and not (isinstance(k, decimal128)):
                 # Py2 only: If key is binary string then convert to unicode. Exclude bytes subclass decimal128.
                 changed_keys.append((k, k.decode('utf-8')))
             else:

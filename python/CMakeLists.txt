@@ -285,7 +285,7 @@ else ()
           "SWIG=${SWIG_EXECUTABLE}"
           "TOXENV=${TOX_ENVLIST}"
           "PY_TEST_DIR=${CMAKE_CURRENT_SOURCE_DIR}/tests"
-        COMMAND ${PYTHON_EXECUTABLE} -m tox)
+        COMMAND ${PYTHON_EXECUTABLE} -m tox -e pep8)
       set_tests_properties(python-tox-test
         PROPERTIES
         PASS_REGULAR_EXPRESSION "Totals: .* ignored, 0 failed"

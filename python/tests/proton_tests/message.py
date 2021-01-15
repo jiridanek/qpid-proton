@@ -145,7 +145,7 @@ class CodecTest(Test):
 
         assert msg2.properties == self.msg.properties
         for k in msg2.properties:
-            assert isinstance(k, unicode), 'non-string key %s %s' % (k, type(k))
+            assert type(k) is unicode, 'non-string key %s %s' % (k, type(k))
 
     def _testNonStringPropertyKey(self, k):
         self.msg.properties = {k: 'abc'}
@@ -197,7 +197,7 @@ class CodecTest(Test):
 
             assert msg2.properties == self.msg.properties
             for k in msg2.properties:
-                assert isinstance(k, unicode), 'non-string key %s %s' % (k, type(k))
+                assert type(k) is unicode, 'non-string key %s %s' % (k, type(k))
 
     def testAnnotationsSymbolicAndUlongKey(self, a={symbol('one'): 1, 'two': 2, ulong(3): 'three'}):
         self.msg.annotations = a

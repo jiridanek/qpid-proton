@@ -580,7 +580,7 @@ class PatternMatcher:
 class FunctionScanner(PatternMatcher):
 
     def inspect(self, obj):
-        return isinstance(obj, types.FunctionType) and self.matches(obj.__name__)
+        return type(obj) == types.FunctionType and self.matches(obj.__name__)
 
     def descend(self, func):
         # the None is required for older versions of python
@@ -611,7 +611,7 @@ class ClassScanner(PatternMatcher):
 class ModuleScanner:
 
     def inspect(self, obj):
-        return isinstance(obj, types.ModuleType)
+        return type(obj) == types.ModuleType
 
     def descend(self, obj):
         for name in sorted(dir(obj)):

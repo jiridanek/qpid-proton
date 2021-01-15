@@ -180,7 +180,7 @@ class DataTest(Test):
         if dtype is None:
             assert described == False
         else:
-            assert described == True
+            assert described
         assert type == aTYPE, type
         assert self.data.enter()
         if described:

@@ -210,7 +210,7 @@ class ExceptionTest(Test):
                 assert event.container == self.parent.container
         self.task = self.container.schedule(0, Nothing(self))
         self.container.run()
-        assert self.triggered == True
+        assert self.triggered
 
     def test_schedule_many_nothings(self):
         class Nothing:

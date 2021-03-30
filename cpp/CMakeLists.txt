@@ -158,7 +158,11 @@ if(BUILD_STATIC_LIBS)
   set(STATIC_LIBS qpid-proton-cpp-static)
 endif(BUILD_STATIC_LIBS)
 
-target_link_libraries (qpid-proton-cpp LINK_PRIVATE ${PLATFORM_LIBS} qpid-proton-core qpid-proton-proactor ${CONNECT_CONFIG_LIBS})
+if (qpid-proton-proactor)
+  target_link_libraries (qpid-proton-cpp LINK_PRIVATE ${PLATFORM_LIBS} qpid-proton-core qpid-proton-proactor ${CONNECT_CONFIG_LIBS})
+else()
+  target_link_libraries (qpid-proton-cpp LINK_PRIVATE ${PLATFORM_LIBS} qpid-proton-core ${CONNECT_CONFIG_LIBS})
+endif()
 
 set_target_properties (
   qpid-proton-cpp

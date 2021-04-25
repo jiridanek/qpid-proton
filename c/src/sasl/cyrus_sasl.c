@@ -180,6 +180,7 @@ static int pni_authorize(sasl_conn_t *conn,
     const char *def_realm, unsigned urlen,
     struct propctx *propctx)
 {
+    printf("pni_authorize: \n");
   PN_LOG_DEFAULT(PN_SUBSYSTEM_SASL, PN_LEVEL_TRACE, "Authorized: userid=%*s by authuser=%*s @ %*s",
     rlen, requested_user,
     alen, auth_identity,
@@ -187,8 +188,16 @@ static int pni_authorize(sasl_conn_t *conn,
   return SASL_OK;
 }
 
+int pn_sasl_logging_cb(void *context,
+		       int level,
+		       const char *message) {
+    printf("pn_sasl_logging_cb: %s\n", message);
+    return SASL_OK;
+}
+
 static const sasl_callback_t pni_server_callbacks[] = {
     {SASL_CB_PROXY_POLICY, (int(*)(void)) pni_authorize, NULL},
+    {SASL_CB_LOG, (int(*)(void)) pn_sasl_logging_cb, NULL},
     {SASL_CB_LIST_END, NULL, NULL},
 };
 

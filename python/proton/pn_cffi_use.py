@@ -10,6 +10,9 @@ _proton.lib.pn_message_set_durable(a, True)
 print(_proton.lib.pn_message_is_durable(a))
 print(dir(a))
 
+if __name__ == '__main__':
+    exit(0)
+
 from _proton.lib import PN_DEFAULT_PRIORITY, PN_OVERFLOW, pn_error_text, pn_message, \
     pn_message_annotations, pn_message_body, pn_message_clear, pn_message_correlation_id, pn_message_decode, \
     pn_message_encode, pn_message_error, pn_message_free, pn_message_get_address, pn_message_get_content_encoding, \

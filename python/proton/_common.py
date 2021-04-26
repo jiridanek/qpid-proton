@@ -77,10 +77,12 @@ def unicode2utf8(string):
     # Anything else illegal - specifically python3 bytes
     raise TypeError("Unrecognized string type: %r (%s)" % (string, type(string)))
 
+from _proton import ffi
+
 
 def utf82unicode(string):
     """Convert C strings returned from proton-c into python unicode"""
-    if string is None:
+    if string is None or string == ffi.NULL:
         return None
     elif isinstance(string, unicode):
         # py2 unicode, py3 str (via hack definition)
@@ -88,4 +90,6 @@ def utf82unicode(string):
     elif isinstance(string, bytes):
         # py2 str (via hack definition), py3 bytes
         return string.decode('utf8')
-    raise TypeError("Unrecognized string type")
+    else:
+        return ffi.string(string).decode()
+    raise TypeError("Unrecognized string type", string)

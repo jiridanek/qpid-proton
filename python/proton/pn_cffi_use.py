@@ -302,7 +302,7 @@ class Message(object):
         return utf82unicode(pn_message_get_address(self._msg))
 
     def _set_address(self, value):
-        self._check(pn_message_set_address(self._msg, unicode2utf8(value)))
+        self._check(pn_message_set_address(self._msg, unicode2utf8(value).encode()))
 
     address = property(_get_address, _set_address, doc="""
         The address of the message.

@@ -99,12 +99,14 @@ ssize_t pn_message_send(pn_message_t *msg, pn_link_t *sender, pn_rwbytes_t *buf)
 int pn_message_data(pn_message_t *msg, pn_data_t *data);
 """)
 
+
 def print_headers(filename):
     with open(filename, 'rt') as f:
-        for l in f.readlines():
+        for line in f.readlines():
             pn_extern_ = 'PN_EXTERN '
-            if l.startswith(pn_extern_):
-                print(l[len(pn_extern_):], end='')
+            if line.startswith(pn_extern_):
+                print(line[len(pn_extern_):], end='')
+
 
 if __name__ == "__main__":
     print_headers('/home/jdanek/repos/qpid/qpid-proton/c/include/proton/message.h')

@@ -48,30 +48,30 @@ endif()
 
 set (pysrc
     proton/__init__.py
-    proton/_compat.py
-    proton/_common.py
-    proton/_condition.py
-    proton/_data.py
-    proton/_delivery.py
-    proton/_endpoints.py
-    proton/_events.py
-    proton/_exceptions.py
-    proton/_io.py
-    proton/_message.py
-    proton/_tracing.py
-    proton/_transport.py
-    proton/_url.py
-    proton/_wrapper.py
-
-    proton/handlers.py
-    proton/reactor.py
-    proton/tracing.py
-    proton/utils.py
-
-    proton/_handlers.py
-    proton/_reactor.py
-    proton/_selectable.py
-    proton/_utils.py
+#    proton/_compat.py
+#    proton/_common.py
+#    proton/_condition.py
+#    proton/_data.py
+#    proton/_delivery.py
+#    proton/_endpoints.py
+#    proton/_events.py
+#    proton/_exceptions.py
+#    proton/_io.py
+#    proton/_message.py
+#    proton/_tracing.py
+#    proton/_transport.py
+#    proton/_url.py
+#    proton/_wrapper.py
+#
+#    proton/handlers.py
+#    proton/reactor.py
+#    proton/tracing.py
+#    proton/utils.py
+#
+#    proton/_handlers.py
+#    proton/_reactor.py
+#    proton/_selectable.py
+#    proton/_utils.py
     )
 
 macro (py_compile directory files artifacts)

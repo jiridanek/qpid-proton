@@ -25,9 +25,9 @@ add_custom_command(
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generate_binding_code.py)
 
 if (WIN32)
-  set(python_suffix pyd)
+  set(python_suffix .pyd)
 else ()
-  set(python_suffix so)
+  set(python_suffix .so)
 endif()
 
 add_library(_proton_core SHARED ${CMAKE_CURRENT_BINARY_DIR}/_proton_core.c)

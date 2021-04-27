@@ -25,6 +25,7 @@ add_custom_command(
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generate_binding_code.py)
 
 add_library(_proton_core SHARED ${CMAKE_CURRENT_BINARY_DIR}/_proton_core.c)
+target_link_directories(_proton_core PRIVATE ${Python_LIBRARY_DIRS})  # TODO: this will not work on older cmake
 target_link_libraries(_proton_core ${BINDING_DEPS} ${Python_LIBRARIES} -lm)
 set_target_properties(_proton_core
     PROPERTIES

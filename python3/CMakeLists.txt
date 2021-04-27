@@ -31,6 +31,7 @@ set_target_properties(_proton_core
     PROPERTIES
         PREFIX ""
         LIBRARY_OUTPUT_NAME "_proton_core.abi3"
+        OUTPUT_NAME "_proton_core.abi3" # previous line was not sufficient on windows
         COMPILE_FLAGS "${C_STANDARD_FLAGS}" # ${COMPILE_WARNING_FLAGS} breaks on -Wpedantic
         LINK_FLAGS "${CATCH_UNDEFINED}")
 
@@ -40,7 +41,7 @@ if (CHECK_SYSINSTALL_PYTHON)
     OUTPUT_VARIABLE PYTHON_SITEARCH_PACKAGES_DEFAULT
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 else ()
-  set (PYTHON_SITEARCH_PACKAGES_DEFAULT ${BINDINGS_DIR}/python)
+  set (PYTHON_SITEARCH_PACKAGES_DEFAULT ${BINDINGS_DIR}/python3)
 endif ()
 
 if (NOT PYTHON_SITEARCH_PACKAGES)

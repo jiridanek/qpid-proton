@@ -24,6 +24,12 @@ add_custom_command(
         COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/generate_binding_code.py" "${CMAKE_CURRENT_BINARY_DIR}/_proton_core.c"
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generate_binding_code.py)
 
+if (WIN32)
+  set(python_suffix pyd)
+else ()
+  set(python_suffix so)
+endif()
+
 add_library(_proton_core SHARED ${CMAKE_CURRENT_BINARY_DIR}/_proton_core.c)
 target_link_directories(_proton_core PRIVATE ${Python_LIBRARY_DIRS})  # TODO: this will not work on older cmake
 target_link_libraries(_proton_core ${BINDING_DEPS} ${Python_LIBRARIES} -lm)
@@ -31,7 +37,8 @@ set_target_properties(_proton_core
     PROPERTIES
         PREFIX ""
         LIBRARY_OUTPUT_NAME "_proton_core.abi3"
-        OUTPUT_NAME "_proton_core.abi3" # previous line was not sufficient on windows
+        OUTPUT_NAME "_proton_core" # on Windows
+        SUFFIX "${python_suffix}"
         COMPILE_FLAGS "${C_STANDARD_FLAGS}" # ${COMPILE_WARNING_FLAGS} breaks on -Wpedantic
         LINK_FLAGS "${CATCH_UNDEFINED}")
 

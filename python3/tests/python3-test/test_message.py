@@ -1,3 +1,4 @@
+import sys
 import unittest
 
 from _proton_core import lib
@@ -20,4 +21,4 @@ class MessageTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    exit(unittest.main())
+    sys.exit(unittest.main())

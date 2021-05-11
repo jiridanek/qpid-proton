@@ -362,7 +362,7 @@ add_subdirectory(c)
 
 # Add bindings that do not require swig here - the directory name must be the same as the binding name
 # See below for swig bindings
-set(BINDINGS cpp go python3)
+set(BINDINGS cpp go)
 
 if (CMAKE_CXX_COMPILER)
   set (DEFAULT_CPP ON)
@@ -419,7 +419,7 @@ if(SWIG_FOUND)
 endif()
 
 # To kick-start a build with just a few bindings enabled by default, e.g. ruby and go:
-#
+#ls
 #     cmake -DBUILD_BINDINGS="ruby;go"
 #
 # This is only used when CMakeCache.txt is first created, after that set the normal

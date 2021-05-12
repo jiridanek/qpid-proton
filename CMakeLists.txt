@@ -419,7 +419,7 @@ if(SWIG_FOUND)
 endif()
 
 # To kick-start a build with just a few bindings enabled by default, e.g. ruby and go:
-#ls
+#
 #     cmake -DBUILD_BINDINGS="ruby;go"
 #
 # This is only used when CMakeCache.txt is first created, after that set the normal

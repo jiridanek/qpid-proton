@@ -1,18 +1,20 @@
-
 import os
 import argparse
 
 
 def read_files_lines(file_path):
+    lines = []
     if not os.path.basename(file_path).endswith(".h"):    raise Exception("Not a header file")
     if not os.path.isfile(file_path):   raise Exception("Not a file")
-    return open(file_path).readlines()
+    with open(file_path) as f:
+        lines = f.readlines()
+    return lines
 
 
 def write_file(filtered_lines, file_name):
-    #TODO:remove the extentions
-    with open(file_name,"w") as f:
-        f.writelines(filtered_lines)
+    lines = "".join(filtered_lines).encode()
+    with open(file_name,"wb") as f:
+        f.write(lines)
 
 
 def filter_with_define(lines):

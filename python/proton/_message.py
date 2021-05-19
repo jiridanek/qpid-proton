@@ -515,10 +515,12 @@ class Message(object):
 
     def encode(self):
         self._pre_encode()
+        bytes = ffi.new("char *")
         sz = 16
+        size = ffi.new("size_t *", sz)
         while True:
-            err, data = pn_message_encode(self._msg, sz)
-            if err == PN_OVERFLOW:
+            data = pn_message_encode(self._msg, bytes, size)
+            if data == PN_OVERFLOW:
                 sz *= 2
                 continue
             else:
@@ -526,7 +528,7 @@ class Message(object):
                 return data
 
     def decode(self, data):
-        self._check(pn_message_decode(self._msg, data))
+        self._check(pn_message_decode(self._msg, data, len(data)))
         self._post_decode()
 
     def send(self, sender, tag=None):
@@ -589,3 +591,5 @@ class Message(object):
             if value:
                 props.append("%s=%r" % (attr, value))
         return "Message(%s)" % ", ".join(props)
+
+

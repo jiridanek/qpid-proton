@@ -22,6 +22,7 @@ from __future__ import absolute_import
 from uuid import uuid4
 from sys import version_info
 
+from _proton_core import ffi
 from proton import *
 
 import common
@@ -44,6 +45,7 @@ class AccessorsTest(Test):
         for v in values:
             setattr(self.msg, name, v)
             gotten = getattr(self.msg, name)
+
             assert gotten == v, gotten
 
     def _test_symbol(self, name):

@@ -804,17 +804,19 @@ class Data:
         :rtype: ``int``
         :raise: :exc:`DataException` if there is a Proton error.
         """
-        size = 1024
+        sz = 1024
         while True:
-            cd, enc = pn_data_encode(self._data, size)
-            if cd == PN_OVERFLOW:
-                size *= 2
-            elif cd >= 0:
-                return enc
+            size = ffi.new('size_t *',sz)
+            bytes = ffi.new('char []', sz)
+            encoded_size = pn_data_encode(self._data, bytes, size)
+            if encoded_size == PN_OVERFLOW:
+                sz *= 2
+            elif encoded_size >= 0:
+                return encoded_size
             else:
-                self._check(cd)
+                self._check(encoded_size)
 
-    def decode(self, encoded):
+    def decode(self, bytes, size):
         """
         Decodes the first value from supplied AMQP data and returns the
         number of bytes consumed.
@@ -823,7 +825,7 @@ class Data:
         :param encoded: AMQP encoded binary data
         :raise: :exc:`DataException` if there is a Proton error.
         """
-        return self._check(pn_data_decode(self._data, encoded))
+        return self._check(pn_data_decode(self._data, bytes, size[0]))
 
     def put_list(self):
         """
@@ -1436,8 +1438,10 @@ class Data:
         :return: If the current node is a symbol, its value, ``""`` otherwise.
         :rtype: :class:`symbol`
         # """
-        # pnbytes = pn_data_get_symbol(self._data)
-        return symbol(pn_data_get_symbol(self._data).decode('ascii'))
+        pnbytes = pn_data_get_symbol(self._data)
+        return symbol(ffi.string(pnbytes.start, pnbytes.size))
+
+        # return symbol(pn_data_get_symbol(self._data).decode('ascii'))
 
     def copy(self, src):
         """

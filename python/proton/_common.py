@@ -77,7 +77,7 @@ def unicode2utf8(string):
         # This must be python2 unicode as we already detected py3 str above
         return string.encode('utf-8')
     elif isinstance(string, ffi.CData):
-        return ffi.string(string).encode('ascii')
+        return ffi.string(string)
     # Anything else illegal - specifically python3 bytes
     raise TypeError("Unrecognized string type: %r (%s)" % (string, type(string)))
 

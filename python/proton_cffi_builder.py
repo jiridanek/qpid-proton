@@ -46,11 +46,11 @@ typedef enum {
     int pn_data_errno(pn_data_t *data);
     pn_error_t * pn_data_error(pn_data_t *data);
   
-  //  int pn_data_vfill(pn_data_t *data, const char *fmt, va_list ap);
+    int pn_data_vfill(pn_data_t *data, const char *fmt, ...);
     
     int pn_data_fill(pn_data_t *data, const char *fmt, ...);
     
-  //  int pn_data_vscan(pn_data_t *data, const char *fmt, va_list ap);
+    int pn_data_vscan(pn_data_t *data, const char *fmt, ...);
     int pn_data_scan(pn_data_t *data, const char *fmt, ...);
     void pn_data_clear(pn_data_t *data);
     size_t pn_data_size(pn_data_t *data);
@@ -227,7 +227,7 @@ message_h = """
     uint8_t        pn_message_get_priority          (pn_message_t *msg);
     int            pn_message_set_priority          (pn_message_t *msg, uint8_t priority);
     pn_millis_t    pn_message_get_ttl               (pn_message_t *msg);
-    int            pn_message_set_ttl               (pn_message_t *msgf, pn_millis_t ttl);
+    int            pn_message_set_ttl               (pn_message_t *msg, pn_millis_t ttl);
     bool           pn_message_is_first_acquirer     (pn_message_t *msg);
     int            pn_message_set_first_acquirer    (pn_message_t *msg, bool first);
     uint32_t       pn_message_get_delivery_count    (pn_message_t *msg);
@@ -295,7 +295,7 @@ error_h = """
     void pn_error_free(pn_error_t *error);
     void pn_error_clear(pn_error_t *error);
     int pn_error_set(pn_error_t *error, int code, const char *text);
-   // int pn_error_vformat(pn_error_t *error, int code, const char *fmt, va_list ap);
+    int pn_error_vformat(pn_error_t *error, int code, const char *fmt, ...);
     int pn_error_format(pn_error_t *error, int code, const char *fmt, ...);
     int pn_error_code(pn_error_t *error);
 

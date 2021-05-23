@@ -515,20 +515,20 @@ class Message(object):
 
     def encode(self):
         self._pre_encode()
-        bytes = ffi.new("char *")
         sz = 16
-        size = ffi.new("size_t *", sz)
         while True:
-            data = pn_message_encode(self._msg, bytes, size)
-            if data == PN_OVERFLOW:
+            size = ffi.new('size_t *', sz)
+            bytes = ffi.new("char []", sz)
+            status_code = pn_message_encode(self._msg, bytes, size)
+            if status_code == PN_OVERFLOW:
                 sz *= 2
                 continue
             else:
-                self._check(err)
-                return data
+                self._check(status_code)
+                return (bytes, size)
 
-    def decode(self, data):
-        self._check(pn_message_decode(self._msg, data, len(data)))
+    def decode(self, bytes, size):
+        self._check(pn_message_decode(self._msg, bytes, size[0]))
         self._post_decode()
 
     def send(self, sender, tag=None):

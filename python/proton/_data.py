@@ -684,7 +684,11 @@ class Data:
     def _check(self, err):
         if err < 0:
             exc = EXCEPTIONS.get(err, DataException)
-            raise exc("[%s]: %s" % (err, pn_error_text(pn_data_error(self._data))))
+            raise exc("[%s]: %s" % (
+                err,
+                ffi.string(pn_error_text(pn_data_error(self._data))).decode('utf8')
+            )
+        )
         else:
             return err
 
@@ -816,7 +820,7 @@ class Data:
             else:
                 self._check(encoded_size)
 
-    def decode(self, bytes, size):
+    def decode(self, data):
         """
         Decodes the first value from supplied AMQP data and returns the
         number of bytes consumed.
@@ -825,6 +829,8 @@ class Data:
         :param encoded: AMQP encoded binary data
         :raise: :exc:`DataException` if there is a Proton error.
         """
+        bytes = ffi.new('char []', data)
+        size = ffi.new('size_t *', len(data))
         return self._check(pn_data_decode(self._data, bytes, size[0]))
 
     def put_list(self):

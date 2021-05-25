@@ -46,7 +46,7 @@ class AccessorsTest(Test):
             setattr(self.msg, name, v)
             gotten = getattr(self.msg, name)
 
-            assert gotten == v, gotten
+            assert gotten == v, (gotten, v)
 
     def _test_symbol(self, name):
         self._test(name, symbol(None), (symbol(u"abc.123.#$%"), symbol(u"hello.world")))
@@ -127,10 +127,10 @@ class CodecTest(Test):
     def testProperties(self):
         self.msg.properties = {}
         self.msg.properties['key'] = 'value'
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         msg2 = Message()
-        msg2.decode(bytes, size)
+        msg2.decode(data)
 
         assert msg2.properties['key'] == 'value', msg2.properties['key']
 
@@ -140,10 +140,10 @@ class CodecTest(Test):
 
     def testStringSubclassPropertyKey(self):
         self.msg.properties = {'abc': 123, CodecTest.MyStringSubclass('def'): 456}
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         msg2 = Message()
-        msg2.decode(bytes, size)
+        msg2.decode(data)
 
         assert msg2.properties == self.msg.properties
         for k in msg2.properties:
@@ -203,10 +203,9 @@ class CodecTest(Test):
 
     def testAnnotationsSymbolicAndUlongKey(self, a={symbol('one'): 1, 'two': 2, ulong(3): 'three'}):
         self.msg.annotations = a
-        bytes, size = self.msg.encode()
-
+        data = self.msg.encode()
         msg2 = Message()
-        msg2.decode(bytes, size)
+        msg2.decode(data)
         # both keys must be symbols
         assert msg2.annotations == a
 
@@ -219,10 +218,10 @@ class CodecTest(Test):
         self.msg.subject = "subject"
         self.msg.body = 'Hello World!'
 
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         msg2 = Message()
-        msg2.decode(bytes, size)
+        msg2.decode(data)
 
         assert self.msg.id == msg2.id, (self.msg.id, msg2.id)
         assert self.msg.correlation_id == msg2.correlation_id, (self.msg.correlation_id, msg2.correlation_id)
@@ -234,16 +233,16 @@ class CodecTest(Test):
 
     def testExpiryEncodeAsNull(self):
         self.msg.group_id = "A"  # Force creation and expiry fields to be present
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         decoder = Data()
 
         # Skip past the headers
-        consumed = decoder.decode(bytes, size)
+        consumed = decoder.decode(data)
         decoder.clear()
-        # data = data[consumed:]
+        data = data[consumed:]
 
-        decoder.decode(bytes, size)
+        decoder.decode(data)
         dproperties = decoder.get_py_described()
         # Check we've got the correct described list
         assert dproperties.descriptor == 0x73, (dproperties.descriptor)
@@ -253,15 +252,13 @@ class CodecTest(Test):
 
     def testCreationEncodeAsNull(self):
         self.msg.group_id = "A"  # Force creation and expiry fields to be present
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
         decoder = Data()
-
         # Skip past the headers
-        consumed = decoder.decode(bytes, size)
+        consumed = decoder.decode(data)
         decoder.clear()
-        # data = data[consumed:]
-
-        decoder.decode(bytes, size)
+        data = data[consumed:]
+        decoder.decode(data)
         dproperties = decoder.get_py_described()
         # Check we've got the correct described list
         assert dproperties.descriptor == 0x73, (dproperties.descriptor)
@@ -271,16 +268,16 @@ class CodecTest(Test):
 
     def testGroupSequenceEncodeAsNull(self):
         self.msg.reply_to_group_id = "R"  # Force group_id and group_sequence fields to be present
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         decoder = Data()
 
         # Skip past the headers
-        consumed = decoder.decode(bytes, size)
+        consumed = decoder.decode(data)
         decoder.clear()
-        # data = data[consumed:]
+        data = data[consumed:]
 
-        decoder.decode(bytes, size)
+        decoder.decode(data)
         dproperties = decoder.get_py_described()
         # Check we've got the correct described list
         assert dproperties.descriptor == 0x73, (dproperties.descriptor)
@@ -292,16 +289,16 @@ class CodecTest(Test):
     def testGroupSequenceEncodeAsNonNull(self):
         self.msg.group_id = "G"
         self.msg.reply_to_group_id = "R"  # Force group_id and group_sequence fields to be present
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         decoder = Data()
 
         # Skip past the headers
-        consumed = decoder.decode(bytes, size)
+        consumed = decoder.decode(data)
         decoder.clear()
-        # data = data[consumed:]
+        data = data[consumed:]
 
-        decoder.decode(bytes, size)
+        decoder.decode(data)
         dproperties = decoder.get_py_described()
         # Check we've got the correct described list
         assert dproperties.descriptor == 0x73, (dproperties.descriptor)
@@ -313,38 +310,33 @@ class CodecTest(Test):
     def testDefaultCreationExpiryDecode(self):
         # This is a message with everything filled explicitly as null or zero in LIST32 HEADER and PROPERTIES lists
         data = b'\x00\x53\x70\xd0\x00\x00\x00\x0a\x00\x00\x00\x05\x42\x40\x40\x42\x52\x00\x00\x53\x73\xd0\x00\x00\x00\x12\x00\x00\x00\x0d\x40\x40\x40\x40\x40\x40\x40\x40\x40\x40\x40\x52\x00\x40'
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', ffi.sizeof(bytes))
         msg2 = Message()
-        msg2.decode(bytes, size)
+        msg2.decode(data)
         assert msg2.expiry_time == 0, (msg2.expiry_time)
         assert msg2.creation_time == 0, (msg2.creation_time)
 
         # The same message with LIST8s instead
         data = b'\x00\x53\x70\xc0\x07\x05\x42\x40\x40\x42\x52\x00\x00\x53\x73\xc0\x0f\x0d\x40\x40\x40\x40\x40\x40\x40\x40\x40\x40\x40\x52\x00\x40'
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', ffi.sizeof(bytes))
+
         msg3 = Message()
-        msg3.decode(bytes, size)
+        msg3.decode(data)
         assert msg2.expiry_time == 0, (msg2.expiry_time)
         assert msg2.creation_time == 0, (msg2.creation_time)
 
         # Minified message with zero length HEADER and PROPERTIES lists
         data = b'\x00\x53\x70\x45' b'\x00\x53\x73\x45'
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', ffi.sizeof(bytes))
         msg4 = Message()
-        msg4.decode(bytes, size)
+        msg4.decode(data)
         assert msg2.expiry_time == 0, (msg2.expiry_time)
         assert msg2.creation_time == 0, (msg2.creation_time)
 
     def testDefaultPriorityEncode(self):
         assert self.msg.priority == 4, (self.msg.priority)
         self.msg.ttl = 0.003  # field after priority, so forces priority to be present
-        bytes, size = self.msg.encode()
+        data = self.msg.encode()
 
         decoder = Data()
-        decoder.decode(bytes, size)
+        decoder.decode(data)
 
         dheaders = decoder.get_py_described()
         # Check we've got the correct described list
@@ -357,24 +349,19 @@ class CodecTest(Test):
     def testDefaultPriorityDecode(self):
         # This is a message with everything filled explicitly as null or zero in LIST32 HEADER and PROPERTIES lists
         data = b'\x00\x53\x70\xd0\x00\x00\x00\x0a\x00\x00\x00\x05\x42\x40\x40\x42\x52\x00\x00\x53\x73\xd0\x00\x00\x00\x22\x00\x00\x00\x0d\x40\x40\x40\x40\x40\x40\x40\x40\x83\x00\x00\x00\x00\x00\x00\x00\x00\x83\x00\x00\x00\x00\x00\x00\x00\x00\x40\x52\x00\x40'
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', ffi.sizeof(bytes))
         msg2 = Message()
-        msg2.decode(bytes, size)
+        msg2.decode(data)
         assert msg2.priority == 4, (msg2.priority)
 
         # The same message with LIST8s instead
         data = b'\x00\x53\x70\xc0\x07\x05\x42\x40\x40\x42\x52\x00\x00\x53\x73\xc0\x1f\x0d\x40\x40\x40\x40\x40\x40\x40\x40\x83\x00\x00\x00\x00\x00\x00\x00\x00\x83\x00\x00\x00\x00\x00\x00\x00\x00\x40\x52\x00\x40'
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', ffi.sizeof(bytes))
+
         msg3 = Message()
-        msg3.decode(bytes, size)
+        msg3.decode(data)
         assert msg3.priority == 4, (msg3.priority)
 
         # Minified message with zero length HEADER and PROPERTIES lists
         data = b'\x00\x53\x70\x45' b'\x00\x53\x73\x45'
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', ffi.sizeof(bytes))
         msg4 = Message()
-        msg4.decode(bytes, size)
+        msg4.decode(data)
         assert msg4.priority == 4, (msg4.priority)

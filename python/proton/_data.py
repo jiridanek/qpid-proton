@@ -36,7 +36,7 @@ from _proton_core.lib import PN_ARRAY, PN_BINARY, PN_BOOL, PN_BYTE, PN_CHAR, PN_
     pn_data_put_decimal32, pn_data_put_decimal64, pn_data_put_described, pn_data_put_double, pn_data_put_float, \
     pn_data_put_int, pn_data_put_list, pn_data_put_long, pn_data_put_map, pn_data_put_null, pn_data_put_short, \
     pn_data_put_string, pn_data_put_symbol, pn_data_put_timestamp, pn_data_put_ubyte, pn_data_put_uint, \
-    pn_data_put_ulong, pn_data_put_ushort, pn_data_put_uuid, pn_data_rewind, pn_data_type, pn_data_widen, pn_error_text, pn_bytes
+    pn_data_put_ulong, pn_data_put_ushort, pn_data_put_uuid, pn_data_rewind, pn_data_type, pn_data_widen, pn_error_text, pn_bytes, pn_data_errno
 
 
 # from cproton import PN_ARRAY, PN_BINARY, PN_BOOL, PN_BYTE, PN_CHAR, PN_DECIMAL128, PN_DECIMAL32, PN_DECIMAL64, \
@@ -686,7 +686,8 @@ class Data:
             exc = EXCEPTIONS.get(err, DataException)
             raise exc("[%s]: %s" % (
                 err,
-                ffi.string(pn_error_text(pn_data_error(self._data))).decode('utf8')
+                # ffi.string(pn_error_text(pn_data_error(self._data))).decode('utf8')
+                pn_error_text(pn_data_error(self._data))
             )
         )
         else:
@@ -810,9 +811,9 @@ class Data:
         """
         sz = 1024
         while True:
-            size = ffi.new('size_t *',sz)
+            size = ffi.new('size_t *', sz)
             bytes = ffi.new('char []', sz)
-            encoded_size = pn_data_encode(self._data, bytes, size)
+            encoded_size = pn_data_encode(self._data, bytes, size[0])
             if encoded_size == PN_OVERFLOW:
                 sz *= 2
             elif encoded_size >= 0:
@@ -830,7 +831,7 @@ class Data:
         :raise: :exc:`DataException` if there is a Proton error.
         """
         bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', len(data))
+        size = ffi.new('size_t *', len(bytes))
         return self._check(pn_data_decode(self._data, bytes, size[0]))
 
     def put_list(self):
@@ -1091,7 +1092,11 @@ class Data:
         :type d: ``bytes``, :class:`decimal128`
         :raise: :exc:`DataException` if there is a Proton error.
         """
-        self._check(pn_data_put_decimal128(self._data, d))
+        pn_decimal128 = ffi.new('pn_decimal128_t *')
+        pn_decimal128.bytes = d
+        self._check(
+            pn_data_put_decimal128(self._data, pn_decimal128[0])
+        )
 
     def put_uuid(self, u):
         """
@@ -1113,7 +1118,7 @@ class Data:
         :type b: ``bytes``
         :raise: :exc:`DataException` if there is a Proton error.
         """
-        self._check(pn_data_put_binary(self._data, b))
+        self._check(pn_data_put_binary(self._data, pn_bytes(len(b), b)))
 
     def put_memoryview(self, mv):
         """
@@ -1402,7 +1407,7 @@ class Data:
         :return: If the current node is a decimal128, its value, 0 otherwise.
         :rtype: :class:`decimal128`
         """
-        return decimal128(pn_data_get_decimal128(self._data))
+        return decimal128(ffi.string(pn_data_get_decimal128(self._data).bytes))
 
     def get_uuid(self):
         """
@@ -1425,7 +1430,8 @@ class Data:
         :return: If the current node is binary, its value, ``""`` otherwise.
         :rtype: ``bytes``
         """
-        return pn_data_get_binary(self._data)
+        pn_bytes = pn_data_get_binary(self._data)
+        return ffi.buffer(pn_bytes.start, pn_bytes.size)[:]
 
     def get_string(self):
         """
@@ -1445,7 +1451,8 @@ class Data:
         :rtype: :class:`symbol`
         """
         pnbytes = pn_data_get_symbol(self._data)
-        return symbol(ffi.string(pnbytes.start, pnbytes.size).decode('ascii'))
+        # return symbol(ffi.string(pnbytes.start, pnbytes.size).decode('ascii'))
+        return symbol(ffi.string(pnbytes.start, pnbytes.size).decode('utf8'))
 
     def copy(self, src):
         """

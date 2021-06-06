@@ -19,8 +19,13 @@
 
 from __future__ import absolute_import
 
-from cproton import pn_incref, pn_decref, \
-    pn_py2void, pn_void2py, \
+# from cproton import pn_incref, pn_decref, \
+#     pn_py2void, pn_void2py, \
+#     pn_record_get, pn_record_def, pn_record_set, \
+#     PN_PYREF
+
+from _proton_core import ffi
+from _proton_core.lib import pn_incref, pn_decref, \
     pn_record_get, pn_record_def, pn_record_set, \
     PN_PYREF
 
@@ -78,11 +83,21 @@ class Wrapper(object):
 
         if get_context:
             record = get_context(impl)
-            attrs = pn_void2py(pn_record_get(record, PYCTX))
-            if attrs is None:
+            attrs = pn_record_get(record, PYCTX)
+            print(f"log value of attrs {attrs=}")
+            # attrs = pn_void2py(pn_record_get(record, PYCTX))
+            if attrs is None or attrs == ffi.NULL:
                 attrs = {}
                 pn_record_def(record, PYCTX, PN_PYREF)
-                pn_record_set(record, PYCTX, pn_py2void(attrs))
+                # pn_record_set(record, PYCTX, pn_py2void(attrs))
+                print(f"log {PYCTX=}")
+                print(f"log {attrs=}")
+                print(f"log {record=}")
+                # pn_record_set(record, PYCTX, attrs)
+                att = ffi.new_handle(attrs)
+                # att = ffi.cast("void *", att)
+                print(f"log {att=}")
+                pn_record_set(record, PYCTX, attrs)
                 init = True
         else:
             attrs = EMPTY_ATTRS
@@ -91,6 +106,7 @@ class Wrapper(object):
         self.__dict__["_impl"] = impl
         self.__dict__["_attrs"] = attrs
         self.__dict__["_record"] = record
+
         if init:
             self._init()
 
@@ -134,6 +150,12 @@ class Wrapper(object):
                                         self.__class__.__name__,
                                         id(self), addressof(self._impl))
 
+# print(f"log _wrapper line 144 {pn_py2void(Wrapper)=} ")
+# PYCTX = int(pn_py2void(Wrapper))
+# print(f"log _wrapper line 144 : type {type(Wrapper)} \n wrapper {Wrapper}")
+handle = ffi.new_handle(Wrapper)
+# PYCTX = int(Wrapper)
 
-PYCTX = int(pn_py2void(Wrapper))
+# PYCTX = int(ffi.cast("int", handle))
+PYCTX = ffi.cast("void *", handle)
 addressof = int

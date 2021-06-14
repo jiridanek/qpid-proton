@@ -762,7 +762,7 @@ class Data:
         return pn_data_exit(self._data)
 
     def lookup(self, name):
-        return pn_data_lookup(self._data, name)
+        return pn_data_lookup(self._data, name.encode())
 
     def narrow(self):
         """
@@ -801,38 +801,33 @@ class Data:
         """
         return pn_data_encoded_size(self._data)
 
-    def encode(self):
+    def encode(self) -> bytes:
         """
         Returns a representation of the data encoded in AMQP format.
 
-        :return: The size of the encoded data
-        :rtype: ``int``
+        :return: The encoded data
         :raise: :exc:`DataException` if there is a Proton error.
         """
         sz = 1024
         while True:
-            size = ffi.new('size_t *', sz)
-            bytes = ffi.new('char []', sz)
-            encoded_size = pn_data_encode(self._data, bytes, size[0])
+            dst = ffi.new('char *[]', sz)
+            encoded_size = pn_data_encode(self._data, dst, sz)
             if encoded_size == PN_OVERFLOW:
                 sz *= 2
             elif encoded_size >= 0:
-                return encoded_size
+                return ffi.buffer(dst, encoded_size)
             else:
                 self._check(encoded_size)
 
-    def decode(self, data):
+    def decode(self, data: bytes) -> int:
         """
         Decodes the first value from supplied AMQP data and returns the
         number of bytes consumed.
 
-        :type encoded: binary
-        :param encoded: AMQP encoded binary data
+        :param data: AMQP encoded binary data
         :raise: :exc:`DataException` if there is a Proton error.
         """
-        bytes = ffi.new('char []', data)
-        size = ffi.new('size_t *', len(bytes))
-        return self._check(pn_data_decode(self._data, bytes, size[0]))
+        return self._check(pn_data_decode(self._data, ffi.from_buffer(data), len(data)))
 
     def put_list(self):
         """
@@ -1418,7 +1413,7 @@ class Data:
         """
         if pn_data_type(self._data) == Data.UUID:
             return uuid.UUID(
-                bytes=ffi.string(pn_data_get_uuid(self._data).bytes) 
+                bytes=bytes(ffi.buffer(pn_data_get_uuid(self._data).bytes))
             )
         else:
             return None
@@ -1473,15 +1468,17 @@ class Data:
         :rtype: ``str``
         :raise: :exc:`DataException` if there is a Proton error.
         """
-        sz = 16
+        size = 16
         while True:
-            err, result = pn_data_format(self._data, sz)
+            buffer = ffi.new('char []', size)
+            sz = ffi.new('size_t *', size)
+            err = pn_data_format(self._data, buffer, sz)
             if err == PN_OVERFLOW:
-                sz *= 2
+                size *= 2
                 continue
             else:
                 self._check(err)
-                return result
+                return ffi.buffer(buffer, sz[0])
 
     def dump(self):
         """

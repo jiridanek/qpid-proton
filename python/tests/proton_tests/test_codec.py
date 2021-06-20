@@ -411,7 +411,7 @@ class DataTest(Test):
     def testDouble(self):
         self._test("double", 0, 1, 2, 3, 0.1, 0.2, 0.3, -1, -2, -3, -0.1, -0.2, -0.3)
 
-    def testBinary(self):     
+    def testBinary(self):
         self._test("binary", b"this", b"is", b"a", b"test", b"of" b"b\x00inary")
 
     def testSymbol(self):

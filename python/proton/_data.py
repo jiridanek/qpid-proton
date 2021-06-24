@@ -17,12 +17,9 @@
 # under the License.
 #
 
-from __future__ import absolute_import
-
 import uuid
 
-from _proton_core import ffi
-from _proton_core.lib import PN_ARRAY, PN_BINARY, PN_BOOL, PN_BYTE, PN_CHAR, PN_DECIMAL128, PN_DECIMAL32, PN_DECIMAL64, \
+from ._cproton import PN_ARRAY, PN_BINARY, PN_BOOL, PN_BYTE, PN_CHAR, PN_DECIMAL128, PN_DECIMAL32, PN_DECIMAL64, \
     PN_DESCRIBED, PN_DOUBLE, PN_FLOAT, PN_INT, PN_LIST, PN_LONG, PN_MAP, PN_NULL, PN_OVERFLOW, PN_SHORT, PN_STRING, \
     PN_SYMBOL, PN_TIMESTAMP, PN_UBYTE, PN_UINT, PN_ULONG, PN_USHORT, PN_UUID, pn_data, pn_data_clear, pn_data_copy, \
     pn_data_decode, pn_data_dump, pn_data_encode, pn_data_encoded_size, pn_data_enter, pn_data_error, pn_data_exit, \
@@ -818,7 +815,7 @@ class Data:
             else:
                 self._check(encoded_size)
 
-    def decode(self, data: bytes) -> int:
+    def decode(self, encoded: bytes) -> int:
         """
         Decodes the first value from supplied AMQP data and returns the
         number of bytes consumed.
@@ -1141,7 +1138,7 @@ class Data:
         :param s: a unicode string
         :type s: ``str`` (Python 3.x) or ``unicode`` (Python 2.x)
         :raise: :exc:`DataException` if there is a Proton error.
-        """ 
+        """
         pnbytes = pn_bytes(len(s), s.encode("utf8"))
         self._check(pn_data_put_string(self._data, pnbytes))
 

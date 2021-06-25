@@ -66,19 +66,19 @@ class ClientTransportTest(Test):
         # verify that a framing error was reported
         assert self.conn.remote_condition.name == name, self.conn.remote_condition
 
-    @unittest.skip
+    # @unittest.skip
     def testEOS(self):
         self.transport.push(b"")  # should be a noop
         self.transport.close_tail()  # should result in framing error
         self.assert_error(u'amqp:connection:framing-error')
 
-    @unittest.skip
+    # @unittest.skip
     def testPartial(self):
         self.transport.push(b"AMQ")  # partial header
         self.transport.close_tail()  # should result in framing error
         self.assert_error(u'amqp:connection:framing-error')
 
-    @unittest.skip
+    # @unittest.skip
     def testGarbage(self, garbage=b"GARBAGE_"):
         self.transport.push(garbage)
         self.assert_error(u'amqp:connection:framing-error')
@@ -100,7 +100,6 @@ class ClientTransportTest(Test):
         self.transport.close_tail()
         self.assert_error(u'amqp:connection:framing-error')
 
-    @unittest.skip
     def testHeaderBadDOFF1(self):
         """Verify doff > size error"""
         self.testGarbage(b"AMQP\x00\x01\x00\x00\x00\x00\x00\x08\x08\x00\x00\x00")

@@ -414,6 +414,11 @@ class EndpointStateHandler(Handler):
             self.on_link_closing(event)
         event.link.close()
 
+    def on_link_local_close(self, event):
+        if self.is_remote_closed(event.link):
+            self.on_link_closed(event)
+        event.link.close()
+
     def on_session_remote_close(self, event: Event) -> None:
         if event.session.remote_condition:
             self.on_session_error(event)

@@ -675,6 +675,8 @@ class MessagingHandler(Handler, Acking):
     cases.
 
     :param prefetch: Initial flow credit for receiving messages, defaults to 10.
+        Whenever a message is settled, available credit will be increased to this
+        number through a flow frame.
     :param auto_accept: If ``True``, accept all messages (default). Otherwise
         messages must be individually accepted or rejected.
     :param auto_settle: If ``True``, settle all messages (default). Otherwise
@@ -836,7 +838,10 @@ class MessagingHandler(Handler, Acking):
     def on_sendable(self, event: Event) -> None:
         """
         Called when the sender link has credit and messages can
-        therefore be transferred.
+        therefore be transferred. This callback is called when:
+
+        1) A flow frame is received from remote peer.
+        2) When locally a message is send but more credit is still available.
 
         :param event: The underlying event object. Use this to obtain further
             information on the event.

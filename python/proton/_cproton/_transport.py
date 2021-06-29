@@ -50,3 +50,8 @@ def pn_ssl_domain_set_trusted_ca_db(domain, certificate_db):
 
 def pn_ssl_domain_set_peer_authentication(domain, verify_mode, trusted_CA):
     return lib.pn_ssl_domain_set_peer_authentication(domain, verify_mode, trusted_CA.encode())
+
+
+def pn_sasl(transport):
+    int_data = ffi.cast("int", lib.pn_sasl(transport))
+    return int(int_data)

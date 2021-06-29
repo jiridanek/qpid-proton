@@ -578,8 +578,8 @@ class SASL(Wrapper):
         return pn_sasl_extended()
 
     def __init__(self, transport):
-        Wrapper.__init__(self, transport._impl, pn_transport_attachments)
-        self._sasl = pn_sasl(transport._impl)
+        Wrapper.__init__(self, transport._impl, pn_transport_attachments)        
+        self._sasl = int(pn_sasl(transport._impl))
 
     def _check(self, err):
         if err < 0:

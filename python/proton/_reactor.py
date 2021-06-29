@@ -29,7 +29,7 @@ import traceback
 import uuid
 from functools import total_ordering
 
-from cproton import PN_PYREF, PN_ACCEPTED, PN_EVENT_NONE
+from ._cproton import PN_PYREF, PN_ACCEPTED, PN_EVENT_NONE
 
 from ._delivery import Delivery
 from ._endpoints import Connection, Endpoint, Link, Session, Terminus
@@ -324,6 +324,7 @@ class Reactor(object):
         if impl:
             result.handler = impl
         result._reactor = self
+        print(f"_reactor {self._collector=}")
         result.collect(self._collector)
         return result
 

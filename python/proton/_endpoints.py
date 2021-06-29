@@ -25,7 +25,7 @@ from __future__ import absolute_import
 
 import weakref
 
-from cproton import PN_CONFIGURATION, PN_COORDINATOR, PN_DELIVERIES, PN_DIST_MODE_COPY, PN_DIST_MODE_MOVE, \
+from ._cproton import PN_CONFIGURATION, PN_COORDINATOR, PN_DELIVERIES, PN_DIST_MODE_COPY, PN_DIST_MODE_MOVE, \
     PN_DIST_MODE_UNSPECIFIED, PN_EOS, PN_EXPIRE_NEVER, PN_EXPIRE_WITH_CONNECTION, PN_EXPIRE_WITH_LINK, \
     PN_EXPIRE_WITH_SESSION, PN_LOCAL_ACTIVE, PN_LOCAL_CLOSED, PN_LOCAL_UNINIT, PN_NONDURABLE, PN_RCV_FIRST, \
     PN_RCV_SECOND, PN_REMOTE_ACTIVE, PN_REMOTE_CLOSED, PN_REMOTE_UNINIT, PN_SND_MIXED, PN_SND_SETTLED, PN_SND_UNSETTLED, \
@@ -223,7 +223,7 @@ class Connection(Wrapper, Endpoint):
         return utf82unicode(pn_connection_get_container(self._impl))
 
     def _set_container(self, name):
-        pn_connection_set_container(self._impl, unicode2utf8(name))
+        pn_connection_set_container(self._impl, unicode2utf8(name).encode())
 
     container = property(_get_container, _set_container, doc="""
         The container name for this connection object.
@@ -235,7 +235,7 @@ class Connection(Wrapper, Endpoint):
         return utf82unicode(pn_connection_get_hostname(self._impl))
 
     def _set_hostname(self, name):
-        pn_connection_set_hostname(self._impl, unicode2utf8(name))
+        pn_connection_set_hostname(self._impl, unicode2utf8(name).encode())
 
     hostname = property(_get_hostname, _set_hostname, doc="""
         Set the name of the host (either fully qualified or relative) to which this

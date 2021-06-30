@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 import threading
 
-from cproton import PN_CONNECTION_BOUND, PN_CONNECTION_FINAL, PN_CONNECTION_INIT, PN_CONNECTION_LOCAL_CLOSE, \
+from ._cproton import PN_CONNECTION_BOUND, PN_CONNECTION_FINAL, PN_CONNECTION_INIT, PN_CONNECTION_LOCAL_CLOSE, \
     PN_CONNECTION_LOCAL_OPEN, PN_CONNECTION_REMOTE_CLOSE, PN_CONNECTION_REMOTE_OPEN, PN_CONNECTION_UNBOUND, PN_DELIVERY, \
     PN_LINK_FINAL, PN_LINK_FLOW, PN_LINK_INIT, PN_LINK_LOCAL_CLOSE, PN_LINK_LOCAL_DETACH, PN_LINK_LOCAL_OPEN, \
     PN_LINK_REMOTE_CLOSE, PN_LINK_REMOTE_DETACH, PN_LINK_REMOTE_OPEN, PN_PYREF, PN_SESSION_FINAL, PN_SESSION_INIT, \
@@ -411,7 +411,8 @@ class Event(EventBase):
 
         if cls:
             clsname = pn_class_name(cls)
-            context = wrappers[clsname](pn_event_context(impl))
+            n = pn_event_context(impl)
+            context = wrappers[clsname](n)
 
             # check for an application defined ApplicationEvent and return that.  This
             # avoids an expensive wrap operation invoked by event.context

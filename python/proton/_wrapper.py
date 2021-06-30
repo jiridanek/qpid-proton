@@ -29,6 +29,7 @@ from _proton_core.lib import pn_incref, pn_decref, \
     pn_record_get, pn_record_def, pn_record_set, \
     PN_PYREF, pn_record
 
+
 from ._exceptions import ProtonException
 
 
@@ -66,7 +67,8 @@ class Wrapper(object):
 
     def __init__(self, impl_or_constructor, get_context=None):
         init = False
-        if callable(impl_or_constructor):
+        # if callable(impl_or_constructor):
+        if not isinstance(impl_or_constructor, ffi.CData):
             # we are constructing a new object
             impl = impl_or_constructor()
             if impl is None:

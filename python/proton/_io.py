@@ -44,7 +44,7 @@ class IO(object):
         s.close()
 
     @staticmethod
-    def listen(host, port):
+    def listen(host, port) -> socket:
         s = socket.socket()
         IO._setupsocket(s)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)

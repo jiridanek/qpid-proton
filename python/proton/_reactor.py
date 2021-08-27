@@ -991,7 +991,7 @@ class Backoff(object):
 
 def make_backoff_wrapper(
         backoff: Optional[Union[List[Union[float, int]], bool, Backoff]]
-) -> Optional[Union['WrappedBackoff', List[Union[float, int]], bool, Backoff]]:
+) -> Optional[Union[List[Union[float, int]], bool, Backoff]]:
     """
     Make a wrapper for a backoff object:
     If the object conforms to the old protocol (has reset and next methods) then

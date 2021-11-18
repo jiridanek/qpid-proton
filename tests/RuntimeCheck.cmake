@@ -44,7 +44,7 @@ if((CMAKE_C_COMPILER_ID MATCHES "GNU"
 endif()
 
 # Valid values for RUNTIME_CHECK
-set(runtime_checks OFF asan tsan memcheck helgrind)
+set(runtime_checks OFF asan msan tsan memcheck helgrind)
 
 # Set the default
 if(NOT CMAKE_BUILD_TYPE MATCHES "Coverage" AND VALGRIND_EXECUTABLE)
@@ -105,6 +105,13 @@ elseif(RUNTIME_CHECK STREQUAL "asan")
   set(TEST_WRAP_PREFIX "${CMAKE_SOURCE_DIR}/tests/preload_asan.sh $<TARGET_FILE:qpid-proton-core>")
   list(APPEND TEST_ENV "UBSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/tests/ubsan.supp")
   list(APPEND TEST_ENV "LSAN_OPTIONS=suppressions=${CMAKE_SOURCE_DIR}/tests/lsan.supp")
+
+elseif(RUNTIME_CHECK STREQUAL "msan")
+  assert_has_sanitizers()
+  message(STATUS "Runtime memory checker: gcc/clang memory sanitizer")
+  set(SANITIZE_FLAGS "-g -fno-omit-frame-pointer -fsanitize=memory -fsanitize-memory-use-after-dtor")
+  set(TEST_WRAP_PREFIX "${CMAKE_SOURCE_DIR}/tests/preload_msan.sh $<TARGET_FILE:qpid-proton-core>")
+  list(APPEND TEST_ENV "MSAN_OPTIONS=poison_in_dtor=1 suppressions=${CMAKE_SOURCE_DIR}/tests/msan.supp")
 
 elseif(RUNTIME_CHECK STREQUAL "tsan")
   assert_has_sanitizers()

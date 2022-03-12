@@ -468,6 +468,9 @@ if (BUILD_STATIC_LIBS)
   target_compile_definitions(qpid-proton-core-static PUBLIC PROTON_DECLARE_STATIC)
   target_link_libraries (qpid-proton-core-static ${SSL_LIB} ${SASL_LIB} ${PLATFORM_LIBS})
   set_target_properties(qpid-proton-core-static PROPERTIES
+    VERSION   "${PN_LIB_CORE_VERSION}"
+    COMPILE_FLAGS "${LTO}"
+    LINK_FLAGS "${CATCH_UNDEFINED} ${LINK_LTO}"
     EXPORT_NAME core)
 endif(BUILD_STATIC_LIBS)
 
@@ -509,6 +512,9 @@ if (qpid-proton-proactor)
     target_link_libraries (qpid-proton-proactor-static LINK_PUBLIC qpid-proton-core-static)
     target_link_libraries (qpid-proton-proactor-static PRIVATE ${PLATFORM_LIBS} ${PROACTOR_LIBS})
     set_target_properties(qpid-proton-proactor-static PROPERTIES
+      VERSION   "${PN_LIB_PROACTOR_VERSION}"
+      LINK_FLAGS "${CATCH_UNDEFINED} ${LINK_LTO}"
+      COMPILE_FLAGS "${LTO}"
       EXPORT_NAME proactor)
     set(TARGET_qpid-proton-proactor-static qpid-proton-proactor-static)
   endif(BUILD_STATIC_LIBS)
@@ -546,6 +552,9 @@ if (BUILD_STATIC_LIBS)
     ${TARGET_qpid-proton-proactor-static}
     ${SSL_LIB} ${SASL_LIB} ${TIME_LIB} ${PLATFORM_LIBS} ${PROACTOR_LIBS})
   set_target_properties(qpid-proton-static PROPERTIES
+    VERSION   "${PN_LIB_LEGACY_VERSION}"
+    LINK_FLAGS "${CATCH_UNDEFINED} ${LINK_LTO}"
+    COMPILE_FLAGS "${LTO}"
     EXPORT_NAME qpid-proton)
 endif(BUILD_STATIC_LIBS)
 
@@ -588,6 +597,9 @@ if (qpid-proton-tls)
     target_compile_definitions(qpid-proton-tls-static PUBLIC PROTON_DECLARE_STATIC)
     target_link_libraries (qpid-proton-tls-static PRIVATE ${PLATFORM_LIBS})
     set_target_properties(qpid-proton-tls-static PROPERTIES
+      VERSION   "${PN_LIB_TLS_VERSION}"
+      LINK_FLAGS "${CATCH_UNDEFINED} ${LINK_LTO}"
+      COMPILE_FLAGS "${LTO}"
       EXPORT_NAME tls)
     set(TARGET_qpid-proton-tls-static qpid-proton-tls-static)
   endif(BUILD_STATIC_LIBS)

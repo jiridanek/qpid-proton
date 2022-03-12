@@ -116,6 +116,10 @@ if(BUILD_STATIC_LIBS)
   set_target_properties (
     qpid-proton-cpp-static
     PROPERTIES
+    LINKER_LANGUAGE CXX
+    VERSION   "${PN_LIB_CPP_VERSION}"
+    LINK_FLAGS "${CATCH_UNDEFINED} ${LINK_LTO}"
+    COMPILE_FLAGS "${LTO}"
     EXPORT_NAME cpp)
 endif(BUILD_STATIC_LIBS)
 

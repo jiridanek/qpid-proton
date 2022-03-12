@@ -544,6 +544,8 @@ set_target_properties (qpid-proton
 if (BUILD_STATIC_LIBS)
   add_library (qpid-proton-platform-io-static OBJECT ${qpid-proton-platform-io})
   set_target_properties(qpid-proton-platform-io-static PROPERTIES
+    LINK_FLAGS "${CATCH_UNDEFINED} ${LINK_LTO}"
+    COMPILE_FLAGS "${LTO}"
     C_EXTENSIONS ON)
   add_library(qpid-proton-static STATIC $<TARGET_OBJECTS:qpid-proton-platform-io-static> ${qpid-proton-noncore-src})
   target_compile_definitions(qpid-proton-static PUBLIC PROTON_DECLARE_STATIC)

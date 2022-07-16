@@ -23,7 +23,7 @@ def pn_data_lookup(data, name):
 
 
 def pn_data_encode(data, sz):
-    dst = ffi.new('char *[]', sz)
+    dst = ffi.new('char[]', sz)
     encoded_size = lib.pn_data_encode(data, dst, sz)
     if encoded_size >= 0:
         dst = ffi.buffer(dst, encoded_size)

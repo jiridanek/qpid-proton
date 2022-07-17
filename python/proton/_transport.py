@@ -133,6 +133,7 @@ class Transport(Wrapper):
     @tracer.setter
     def tracer(self, tracer: Callable[['Transport', str], None]) -> None:
         handle = pn_py2void(TraceAdapter(tracer))
+        self._handle = handle  # TODO: prevent GC some better way
         pn_transport_set_pytracer(self._impl, handle)
 
     def log(self, message: str) -> None:

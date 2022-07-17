@@ -57,7 +57,8 @@ def pn_data_get_decimal128(data):
 
 
 def pn_data_get_uuid(data):
-    return bytes(ffi.buffer(lib.pn_data_get_uuid(data).bytes))
+    res = lib.pn_data_get_uuid(data)
+    return bytes(ffi.buffer(res.bytes))
 
 
 def pn_data_get_binary(data):

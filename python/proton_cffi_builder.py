@@ -574,7 +574,6 @@ extern const pn_class_t PN_VOID[];
 pn_cid_t pn_class_id(const pn_class_t *clazz);
 const char *pn_class_name(const pn_class_t *clazz);
 void *pn_class_new(const pn_class_t *clazz, size_t size);
-void *pn_class_incref(const pn_class_t *clazz, void *object);
 void *pn_incref(void *object);
 int pn_decref(void *object);
 int pn_refcount(void *object);

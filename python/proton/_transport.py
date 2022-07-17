@@ -123,9 +123,9 @@ class Transport(Wrapper):
         and log message. For no tracer callback, value is ``None``.
         """
         adapter = pn_transport_get_pytracer(self._impl)
-        from proton._cproton import pn_void2py
-        adapter = pn_void2py(adapter)
         if adapter:
+            from proton._cproton import pn_void2py
+            adapter = pn_void2py(adapter)
             return adapter.tracer
         else:
             return None

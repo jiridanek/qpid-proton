@@ -1114,11 +1114,44 @@ def run_cffi_compile(output_file):
     return 1;
   }
 
-        
+#if defined(_MSC_VER)
+
+#define WIN32_LEAN_AMD_MEAN
+#include <windows.h>
+
+#include "core/init.h"
+
+BOOL WINAPI DllMain(HINSTANCE dLL, DWORD reason, LPVOID reserved)
+{
+// Perform actions based on the reason for calling.
+  switch (reason)
+  {
+  case DLL_PROCESS_ATTACH:
+    // Initialize once for each new process.
+    PN_PYREF = pn_class_create("pn_pyref", NULL, NULL, pn_pyref_incref, pn_pyref_decref, pn_pyref_refcount);
+    break;
+
+  case DLL_THREAD_ATTACH:
+    // Do thread-specific initialization.
+    break;
+
+  case DLL_THREAD_DETACH:
+    // Do thread-specific cleanup.
+    break;
+
+  case DLL_PROCESS_DETACH:
+    // Perform any necessary cleanup.
+    //pn_fini();
+    break;
+  }
+  return TRUE;
+}
+#else        
         __attribute__((constructor)) static void init_pn_pyref_in_cffi() {
             PN_PYREF = pn_class_create("pn_pyref", NULL, NULL, pn_pyref_incref, pn_pyref_decref, pn_pyref_refcount);
             //printf("execured constructor");
         }
+#endif
 
         static const char _PN_HANDLE_PNI_PYTRACER;
         static const pn_handle_t PNI_PYTRACER = (pn_handle_t) &_PN_HANDLE_PNI_PYTRACER; 

@@ -1119,8 +1119,6 @@ def run_cffi_compile(output_file):
 #define WIN32_LEAN_AMD_MEAN
 #include <windows.h>
 
-#include "core/init.h"
-
 BOOL WINAPI DllMain(HINSTANCE dLL, DWORD reason, LPVOID reserved)
 {
 // Perform actions based on the reason for calling.

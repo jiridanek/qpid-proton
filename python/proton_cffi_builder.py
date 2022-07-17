@@ -1095,7 +1095,7 @@ def run_cffi_compile(output_file):
       #define SWIG_PYTHON_THREAD_END_BLOCK     PyGILState_Release(_pn_cffi_thread_block)
 
 // /Users/runner/hostedtoolcache/Python/3.6.15/x64/lib/python3.6/site-packages/cffi/cparser.py:165: UserWarning: Global variable 'PN_PYREF' in cdef(): for consistency with C it should have a storage class specifier (usually 'extern')
-          extern pn_class_t* PN_PYREF;
+          pn_class_t* PN_PYREF;
         
           static void pn_pyref_incref(void *object) {
     PyObject* p = (PyObject*) object;

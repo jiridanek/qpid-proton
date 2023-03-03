@@ -59,6 +59,9 @@ const bool ERRORS = false;
 // I could not get rid of the error messages on stderr in any other way
 void devnull(intptr_t context, pn_log_subsystem_t sub,  pn_log_level_t sev, const char *message) {}
 
+#ifdef __cplusplus
+extern "C"
+#endif
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   if (VERBOSE)
     printf("BEGIN LLVMFuzzerTestOneInput\n");

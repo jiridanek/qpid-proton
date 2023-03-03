@@ -25,6 +25,9 @@
 
 #include "libFuzzingEngine.h"
 
+#ifdef __cplusplus
+extern "C"
+#endif
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
   if (Size < 1) {
     // pn_message_decode would die on assert

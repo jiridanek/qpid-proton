@@ -48,7 +48,6 @@ add_library (StandaloneFuzzTargetMain STATIC StandaloneFuzzTargetMain.c Standalo
 #  ${FUZZING_LIBRARY} must precede our definition of LLVMFuzzerTestOneInput on linker cmd line
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/empty.c" "typedef int pn_workaround_empty_translation_unit_warning;\n")
 macro (pn_add_fuzz_test test)
-  set_source_files_properties(${ARGN} PROPERTIES LANGUAGE CXX)
   add_executable (${test} ${ARGN})
   target_link_libraries (${test} ${FUZZING_LIBRARY})
 
@@ -80,7 +79,7 @@ unset(fuzz_test_src)
 # Fuzz tests at the User API level
 pn_add_fuzz_test (fuzz-connection-driver fuzz-connection-driver.c)
 target_link_libraries (fuzz-connection-driver ${FUZZING_QPID_PROTON_CORE_LIBRARY})
-pn_add_fuzz_test (fuzz-message-decode fuzz-message-decode.c)
+pn_add_fuzz_test (fuzz-message-decode fuzz-message-decode.cpp)
 target_link_libraries (fuzz-message-decode ${FUZZING_QPID_PROTON_CORE_LIBRARY})
 
 # pn_url_parse is not in proton core and is only used by messenger so compile specially

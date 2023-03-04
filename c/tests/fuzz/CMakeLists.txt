@@ -48,9 +48,9 @@ add_library (StandaloneFuzzTargetMain STATIC StandaloneFuzzTargetMain.c Standalo
 #  ${FUZZING_LIBRARY} must precede our definition of LLVMFuzzerTestOneInput on linker cmd line
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/empty.c" "typedef int pn_workaround_empty_translation_unit_warning;\n")
 macro (pn_add_fuzz_test test)
-  add_executable (${test} "${CMAKE_CURRENT_BINARY_DIR}/empty.c")
-  add_library(${test}_obj STATIC ${ARGN})
-  target_link_libraries (${test} ${test}_obj ${FUZZING_LIBRARY} ${test}_obj)
+  set_target_properties(${ARGN} PROPERTIES LANGUAGE CXX)
+  add_executable (${test} ${ARGN})
+  target_link_libraries (${test} ${FUZZING_LIBRARY})
 
   list(APPEND fuzz_test_src ${ARGN})
 

@@ -34,11 +34,12 @@ endif()
 if (FUZZ_REGRESSION_TESTS)
   set(FUZZING_LIBRARY StandaloneFuzzTargetMain)
 else ()
-  if(DEFINED ENV{LIB_FUZZING_ENGINE})
-    set(FUZZING_LIBRARY $ENV{LIB_FUZZING_ENGINE})
-  else ()
-    set(FUZZING_LIBRARY FuzzingEngine)
-  endif ()
+  add_library(FuzzingEngine STATIC IMPORTED)
+  set_target_properties(FuzzingEngine PROPERTIES IMPORTED_LOCATION "$ENV{LIB_FUZZING_ENGINE}")
+  # -lFuzzingEngine is a C++ library, which needs c++ std lib
+  set_target_properties(FuzzingEngine PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES CXX)
+
+  set(FUZZING_LIBRARY FuzzingEngine)
 endif ()
 
 add_library (StandaloneFuzzTargetMain STATIC StandaloneFuzzTargetMain.c StandaloneFuzzTargetInit.c)
@@ -46,8 +47,6 @@ add_library (StandaloneFuzzTargetMain STATIC StandaloneFuzzTargetMain.c Standalo
 macro (pn_add_fuzz_test test)
   add_executable (${test} ${ARGN})
   target_link_libraries (${test} ${FUZZING_LIBRARY})
-  # -lFuzzingEngine is a C++ library, which needs c++ std lib
-  set_target_properties(${test} PROPERTIES LINKER_LANGUAGE CXX)
 
   list(APPEND fuzz_test_src ${ARGN})
 

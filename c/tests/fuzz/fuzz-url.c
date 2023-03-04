@@ -32,7 +32,7 @@
 #ifdef __cplusplus
 extern "C"
 #endif
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size) {
   // null-terminate the string in Data in case it doesn't contain null already
   char *str = (char *)malloc(Size + 1);
   memcpy(str, Data, Size);

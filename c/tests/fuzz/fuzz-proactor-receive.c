@@ -336,7 +336,7 @@ int prev_pid = 0;
 #ifdef __cplusplus
 extern "C"
 #endif
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size) {
   // sometimes, esp. with AFL, but libFuzz too,
   // the old socket is still bound for new run and
   // it skips all new runs...

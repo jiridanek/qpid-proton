@@ -35,6 +35,6 @@ int LLVMFuzzerInitialize(int *argc, char ***argv);
 #ifdef __cplusplus
 extern "C"
 #endif
-int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
+int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size);
 
 #endif

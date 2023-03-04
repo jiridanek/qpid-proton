@@ -37,7 +37,7 @@ else ()
   add_library(FuzzingEngine STATIC IMPORTED)
   set_target_properties(FuzzingEngine PROPERTIES IMPORTED_LOCATION "$ENV{LIB_FUZZING_ENGINE}")
   # -lFuzzingEngine is a C++ library, which needs c++ std lib
-  set_target_properties(FuzzingEngine PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES CXX)
+#  set_target_properties(FuzzingEngine PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES CXX)
 
   set(FUZZING_LIBRARY FuzzingEngine)
 endif ()

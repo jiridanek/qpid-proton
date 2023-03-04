@@ -50,7 +50,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/empty.c" "typedef int pn_workaround_empt
 macro (pn_add_fuzz_test test)
   add_executable (${test} "${CMAKE_CURRENT_BINARY_DIR}/empty.c")
   add_library(${test}_obj STATIC ${ARGN})
-  target_link_libraries (${test} ${FUZZING_LIBRARY} ${test}_obj)
+  target_link_libraries (${test} ${test}_obj ${FUZZING_LIBRARY} ${test}_obj)
 
   list(APPEND fuzz_test_src ${ARGN})
 

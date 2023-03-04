@@ -46,7 +46,7 @@ add_library (StandaloneFuzzTargetMain STATIC StandaloneFuzzTargetMain.c Standalo
 
 # workaround https://github.com/google/honggfuzz/issues/336#issuecomment-1454250296
 #  ${FUZZING_LIBRARY} must precede our definition of LLVMFuzzerTestOneInput on linker cmd line
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/empty.c" "typedef int pn_workaround_empty_translation_unit_warning;")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/empty.c" "typedef int pn_workaround_empty_translation_unit_warning;\n")
 macro (pn_add_fuzz_test test)
   add_executable (${test} "${CMAKE_CURRENT_BINARY_DIR}/empty.c")
   add_library(${test}_obj STATIC ${ARGN})

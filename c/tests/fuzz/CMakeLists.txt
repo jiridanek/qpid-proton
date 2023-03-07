@@ -39,8 +39,10 @@ else ()
   # -lFuzzingEngine is a C++ library, which needs c++ std lib
 #  set_target_properties(FuzzingEngine PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES CXX)
 
-  set(FUZZING_LIBRARY FuzzingEngine)
+  set(FUZZING_LIBRARY /home/jdanek/repos/oss-fuzz/libFuzzingEngine.a)
 endif ()
+
+MESSAGE(WARNING "aaa bbb ccc")
 
 add_library (StandaloneFuzzTargetMain STATIC StandaloneFuzzTargetMain.c StandaloneFuzzTargetInit.c)
 

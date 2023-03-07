@@ -38,6 +38,6 @@ PN_EXPORT int LLVMFuzzerInitialize(int *argc, char ***argv);
 #ifdef __cplusplus
 extern "C"
 #endif
-PN_EXPORT int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size);
+PN_EXPORT __attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size);
 
 #endif

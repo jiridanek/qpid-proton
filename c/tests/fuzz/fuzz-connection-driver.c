@@ -62,7 +62,7 @@ void devnull(intptr_t context, pn_log_subsystem_t sub,  pn_log_level_t sev, cons
 #ifdef __cplusplus
 extern "C"
 #endif
-int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size) {
+__attribute__((visibility("default"))) int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size) {
   if (VERBOSE)
     printf("BEGIN LLVMFuzzerTestOneInput\n");
   app_data_t app = {{0}};

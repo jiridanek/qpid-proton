@@ -79,7 +79,7 @@ unset(fuzz_test_src)
 # Fuzz tests at the User API level
 pn_add_fuzz_test (fuzz-connection-driver fuzz-connection-driver.c)
 target_link_libraries (fuzz-connection-driver ${FUZZING_QPID_PROTON_CORE_LIBRARY})
-pn_add_fuzz_test (fuzz-message-decode fuzz-message-decode.cpp)
+pn_add_fuzz_test (fuzz-message-decode fuzz-message-decode.c)
 target_link_libraries (fuzz-message-decode ${FUZZING_QPID_PROTON_CORE_LIBRARY})
 
 # pn_url_parse is not in proton core and is only used by messenger so compile specially

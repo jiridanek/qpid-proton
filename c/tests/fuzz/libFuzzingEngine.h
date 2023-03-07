@@ -25,16 +25,19 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include <proton/import_export.h>
+
 // This header defines `extern "C"` for the fuzzing interface functions
+//  and exports the functions so that honggfuzz will not override them with weak symbol stand-ins
 
 #ifdef __cplusplus
 extern "C"
 #endif
-int LLVMFuzzerInitialize(int *argc, char ***argv);
+PN_EXPORT int LLVMFuzzerInitialize(int *argc, char ***argv);
 
 #ifdef __cplusplus
 extern "C"
 #endif
-int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size);
+PN_EXPORT int LLVMFuzzerTestOneInput(uint8_t *Data, size_t Size);
 
 #endif

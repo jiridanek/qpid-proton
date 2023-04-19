@@ -60,7 +60,7 @@
     #define PN_PRINTF_FORMAT _Printf_format_string_
     #define PN_PRINTF_FORMAT_ATTR(format_param, dots_param) /**/
 
-#elif defined(__GNUC__) && !defined(SWIG)
+#elif defined(__GNUC__)
 
     #define PN_PRINTF_FORMAT /**/
     #define PN_PRINTF_FORMAT_ATTR(format_param, dots_param) \
@@ -83,7 +83,7 @@
 #if !defined PN_NODISCARD
     #if defined(_MSC_VER) && (_MSC_VER >= 1700)
         #define PN_NODISCARD _Check_return_
-    #elif defined(__GNUC__) && !defined(SWIG)
+    #elif defined(__GNUC__)
         #define PN_NODISCARD __attribute__((__warn_unused_result__))
     #else
         #define PN_NODISCARD

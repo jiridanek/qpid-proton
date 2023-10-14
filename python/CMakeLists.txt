@@ -134,6 +134,7 @@ add_custom_command(OUTPUT .timestamp.copied_pysrc
 
 foreach(file IN LISTS py_dist_files pysrc)
   add_custom_command(OUTPUT "${file}"
+                     COMMAND ${CMAKE_COMMAND} -E make_directory proton
                      COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${file} ${file}
                      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
   list(APPEND pysrc_files "${CMAKE_CURRENT_BINARY_DIR}/${file}")

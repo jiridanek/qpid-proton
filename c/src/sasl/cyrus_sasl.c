@@ -187,10 +187,13 @@ static int pni_authorize(sasl_conn_t *conn,
   return SASL_OK;
 }
 
+_Pragma("GCC diagnostic push")
+_Pragma("GCC diagnostic ignored \"-Wcast-function-type\"")
 static const sasl_callback_t pni_server_callbacks[] = {
     {SASL_CB_PROXY_POLICY, (int(*)(void)) pni_authorize, NULL},
     {SASL_CB_LIST_END, NULL, NULL},
 };
+_Pragma("GCC diagnostic pop")
 
 // Machinery to initialise the cyrus library only once even in a multithreaded environment
 // Relies on pthreads.

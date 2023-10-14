@@ -712,6 +712,33 @@ install (FILES
   ../tools/cmake/Modules/FindCyrusSASL.cmake
   DESTINATION ${LIB_INSTALL_DIR}/cmake/Proton)
 
+# TODO: we pretty much have this already in tools/cmake/config/ dir because of our examples...
+
+#  so we can let them embed us, then have the embedding project call find_package, and it would find that...
+
+# In case proton is being embedded in another CMake project, export our targets
+# using alias libraries, named the same as the script installed as ProtonTargets.cmake creates imported targets
+set (Proton_VERSION ${PN_VERSION} PARENT_SCOPE)
+if (NOT Proton_USE_STATIC_LIBS)
+  add_library(${PROJECT_NAME}::qpid-proton ALIAS qpid-proton)
+  add_library(${PROJECT_NAME}::core ALIAS qpid-proton-core)
+  if(HAS_PROACTOR)
+    add_library(${PROJECT_NAME}::proactor ALIAS qpid-proton-proactor)
+  endif(HAS_PROACTOR)
+  if (HAS_TLS)
+    add_library(${PROJECT_NAME}::tls ALIAS qpid-proton-tls)
+  endif()
+else()
+  add_library(${PROJECT_NAME}::qpid-proton ALIAS qpid-proton-static)
+  add_library(${PROJECT_NAME}::core ALIAS qpid-proton-core-static)
+  if(HAS_PROACTOR)
+    add_library(${PROJECT_NAME}::proactor ALIAS qpid-proton-proactor-static)
+  endif(HAS_PROACTOR)
+  if (HAS_TLS)
+    add_library(${PROJECT_NAME}::tls ALIAS qpid-proton-tls-static)
+  endif()
+endif()
+
 if (PROJECT_IS_TOP_LEVEL)
   if (ENABLE_BENCHMARKS)
     add_subdirectory(benchmarks)

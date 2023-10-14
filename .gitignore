@@ -4,6 +4,8 @@
 /bld*/
 /BLD*/
 /out
+# CMake FetchContent populates this
+/_deps
 
 *.class
 *.o

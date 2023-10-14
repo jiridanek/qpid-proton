@@ -445,6 +445,9 @@ target_link_libraries (qpid-proton-platform-io-objects ${SSL_LIB} ${SASL_LIB} ${
 
 add_library (qpid-proton-core SHARED $<TARGET_OBJECTS:qpid-proton-core-objects>)
 target_link_libraries (qpid-proton-core LINK_PRIVATE ${SSL_LIB} ${SASL_LIB} ${PLATFORM_LIBS})
+target_include_directories(qpid-proton-core PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
 set_target_properties (qpid-proton-core
   PROPERTIES
   VERSION   "${PN_LIB_CORE_VERSION}"
@@ -456,6 +459,9 @@ if (BUILD_STATIC_LIBS)
   add_library (qpid-proton-core-static STATIC ${qpid-proton-core-src})
   target_compile_definitions(qpid-proton-core-static PUBLIC PROTON_DECLARE_STATIC)
   target_link_libraries (qpid-proton-core-static ${SSL_LIB} ${SASL_LIB} ${PLATFORM_LIBS})
+  target_include_directories(qpid-proton-core-static PUBLIC
+          "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+          "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
   set_target_properties(qpid-proton-core-static PROPERTIES
     EXPORT_NAME core)
 endif(BUILD_STATIC_LIBS)
@@ -504,6 +510,9 @@ add_library (qpid-proton SHARED
   $<TARGET_OBJECTS:qpid-proton-platform-io-objects>
   $<TARGET_OBJECTS:qpid-proton-proactor-objects>
   ${qpid-proton-noncore-src})
+target_include_directories(qpid-proton PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
 target_link_libraries (qpid-proton LINK_PRIVATE ${SSL_LIB} ${SASL_LIB} ${TIME_LIB} ${PLATFORM_LIBS} ${PROACTOR_LIBS})
 set_target_properties (qpid-proton
   PROPERTIES
@@ -519,6 +528,9 @@ if (BUILD_STATIC_LIBS)
     C_EXTENSIONS ON)
   add_library(qpid-proton-static STATIC $<TARGET_OBJECTS:qpid-proton-platform-io-static> ${qpid-proton-noncore-src})
   target_compile_definitions(qpid-proton-static PUBLIC PROTON_DECLARE_STATIC)
+  target_include_directories(qpid-proton-static PUBLIC
+          "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+          "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
   target_link_libraries (qpid-proton-static
     qpid-proton-core-static
     qpid-proton-proactor-static

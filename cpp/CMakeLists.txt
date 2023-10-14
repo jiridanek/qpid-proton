@@ -229,6 +229,16 @@ install (FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ProtonCppConfigVersion.cmake
   DESTINATION ${LIB_INSTALL_DIR}/cmake/ProtonCpp)
 
+# see the library aliases comment in c/CMakeLists.txt
+set (ProtonCpp_VERSION ${PN_VERSION} PARENT_SCOPE)
+if (NOT Proton_USE_STATIC_LIBS)
+  add_library(${PROJECT_NAME}::qpid-proton ALIAS qpid-proton)
+  add_library(${PROJECT_NAME}::qpid-proton-core ALIAS qpid-proton-core)
+else()
+  add_library(${PROJECT_NAME}::qpid-proton ALIAS qpid-proton-static)
+  add_library(${PROJECT_NAME}::qpid-proton-core ALIAS qpid-proton-core-static)
+endif()
+
 if (PROJECT_IS_TOP_LEVEL)
   if (BUILD_TESTING)
     include(tests.cmake)

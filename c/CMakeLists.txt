@@ -700,21 +700,23 @@ install (FILES
   ../tools/cmake/Modules/FindCyrusSASL.cmake
   DESTINATION ${LIB_INSTALL_DIR}/cmake/Proton)
 
-if (ENABLE_BENCHMARKS)
-  add_subdirectory(benchmarks)
-endif (ENABLE_BENCHMARKS)
+if (PROJECT_IS_TOP_LEVEL)
+  if (ENABLE_BENCHMARKS)
+    add_subdirectory(benchmarks)
+  endif (ENABLE_BENCHMARKS)
 
-add_subdirectory(docs)
-if (BUILD_EXAMPLES)
-  add_subdirectory(examples)
-endif (BUILD_EXAMPLES)
-if (BUILD_TESTING)
-  add_subdirectory(tests)
-endif (BUILD_TESTING)
-add_subdirectory(tools)
+  add_subdirectory(docs)
+  if (BUILD_EXAMPLES)
+    add_subdirectory(examples)
+  endif (BUILD_EXAMPLES)
+  if (BUILD_TESTING)
+    add_subdirectory(tests)
+  endif (BUILD_TESTING)
+  add_subdirectory(tools)
 
-install (DIRECTORY examples/
-         DESTINATION "${PROTON_SHARE}/examples/c"
-         USE_SOURCE_PERMISSIONS
-         PATTERN "ProtonConfig.cmake" EXCLUDE
-         PATTERN "testme" EXCLUDE)
+  install (DIRECTORY examples/
+           DESTINATION "${PROTON_SHARE}/examples/c"
+           USE_SOURCE_PERMISSIONS
+           PATTERN "ProtonConfig.cmake" EXCLUDE
+           PATTERN "testme" EXCLUDE)
+endif()

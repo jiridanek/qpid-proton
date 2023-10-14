@@ -21,6 +21,16 @@ cmake_minimum_required (VERSION 3.16)
 
 project (Proton C)
 
+# Proton supports embedding in another CMake project, either using add_subdirectory,
+# or the FetchContent functions. Determine whether we are building as an embedded project or not.
+if (NOT DEFINED PROJECT_IS_TOP_LEVEL)
+  if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set (PROJECT_IS_TOP_LEVEL TRUE)
+  else()
+    set (PROJECT_IS_TOP_LEVEL FALSE)
+  endif()
+endif()
+
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/tools/cmake/Modules")
 set (CMAKE_THREAD_PREFER_PTHREAD TRUE)
 
@@ -48,8 +58,10 @@ find_package(Python 3.8
 
 include(tests/PNAddTest.cmake)
 
-# Set up runtime checks (valgrind, sanitizers etc.)
-include(tests/RuntimeCheck.cmake)
+if (PROJECT_IS_TOP_LEVEL)
+  # Set up runtime checks (valgrind, sanitizers etc.)
+  include(tests/RuntimeCheck.cmake)
+endif()
 
 ## Set up so that find_package(Proton) & find_package(ProtonCpp) work in the build tree
 set (Proton_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/config)
@@ -114,7 +126,7 @@ else (CMAKE_CONFIGURATION_TYPES)
 endif (CMAKE_CONFIGURATION_TYPES)
 
 # Add coverage target if we're building for test coverage
-if (CMAKE_BUILD_TYPE MATCHES "Coverage")
+if (PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE MATCHES "Coverage")
   make_directory(coverage_results)
   add_custom_target(coverage
     WORKING_DIRECTORY ./coverage_results
@@ -299,8 +311,10 @@ else (CMAKE_SYSTEM_NAME STREQUAL Windows)
   endfunction()
 endif (CMAKE_SYSTEM_NAME STREQUAL Windows)
 
-add_custom_target(docs)
-add_custom_target(doc DEPENDS docs)
+if (PROJECT_IS_TOP_LEVEL)
+  add_custom_target(docs)
+  add_custom_target(doc DEPENDS docs)
+endif()
 
 # Note: Process bindings after the source lists have been defined so
 # the bindings can reference them.
@@ -390,6 +404,8 @@ configure_file(${PROJECT_SOURCE_DIR}/misc/config.sh.in
 configure_file(${PROJECT_SOURCE_DIR}/misc/config.bat.in
                ${PROJECT_BINARY_DIR}/config.bat @ONLY)
 
-if (BUILD_EXAMPLES)
-  add_subdirectory(tests/examples)
-endif (BUILD_EXAMPLES)
+if (PROJECT_IS_TOP_LEVEL)
+  if (BUILD_EXAMPLES)
+    add_subdirectory(tests/examples)
+  endif (BUILD_EXAMPLES)
+endif()

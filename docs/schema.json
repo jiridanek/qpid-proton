@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://yourdomain.com/schemas/myschema.json",
+  "properties": {
+    "scheme": {
+      "description": "\"amqp\" (no TLS) or \"amqps\"",
+      "type": "string",
+      "enum": [
+        "amqp",
+        "amqps"
+      ],
+      "default": "amqps"
+    },
+    "host": {
+      "description": "DNS or IP address for connection. Defaults to local host.",
+      "type": "string",
+      "default": "localhost"
+    },
+    "port": {
+      "description": "\"amqp\", \"amqps\" or port number. Defaults to value of 'scheme'.",
+      "type": "string"
+    },
+    "user": {
+      "description": "Authentication user name",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "password": {
+      "description": "Authentication password",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": null
+    },
+    "sasl": {
+      "properties": {
+        "enable": {
+          "description": "Enable or disable SASL",
+          "type": "boolean",
+          "default": true
+        },
+        "mechanisms": {
+          "description": "List of allowed SASL mechanism names. If null the library determines the default list.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "default": null
+        },
+        "allow_insecure": {
+          "description": "Allow mechanisms that send unencrypted clear-text passwords",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "tls": {
+      "$comment": "Note: it is an error to have a \"tls\" object unless scheme=\"amqps\"",
+      "properties": {
+        "cert": {
+          "description": "name of client certificate or database",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "key": {
+          "description": "private key or identity for client certificate",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "ca": {
+          "description": "name of CA certificate or database",
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "verify": {
+          "description": "if true, require a valid cert with matching host name",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  },
+  "$comment": "not-required means forbidden in JSON Schema speak",
+  "if": {
+    "properties": {
+      "scheme": {
+        "const": "amqp"
+      }
+    }
+  },
+  "then": {
+    "not": {
+      "required": [
+        "tls"
+      ]
+    }
+  }
+}

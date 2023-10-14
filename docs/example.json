@@ -1,0 +1,20 @@
+{
+  "scheme": "amqp",
+  "host": "localhost",
+  "port": "amqps",
+  "user": null,
+  "password": null,
+
+  "sasl": {
+    "enable": true,
+    "mechanisms": null,
+    "allow_insecure": false
+  },
+
+  "tls": {
+    "cert": null,
+    "key": null,
+    "ca": null,
+    "verify": true
+  }
+}

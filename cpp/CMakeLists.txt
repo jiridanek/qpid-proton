@@ -229,10 +229,12 @@ install (FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ProtonCppConfigVersion.cmake
   DESTINATION ${LIB_INSTALL_DIR}/cmake/ProtonCpp)
 
-if (BUILD_TESTING)
-  include(tests.cmake)
-endif (BUILD_TESTING)
+if (PROJECT_IS_TOP_LEVEL)
+  if (BUILD_TESTING)
+    include(tests.cmake)
+  endif (BUILD_TESTING)
 
-if (ENABLE_BENCHMARKS)
-  add_subdirectory(benchmarks)
-endif (ENABLE_BENCHMARKS)
+  if (ENABLE_BENCHMARKS)
+    add_subdirectory(benchmarks)
+  endif (ENABLE_BENCHMARKS)
+endif()
